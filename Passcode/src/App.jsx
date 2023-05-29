@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useEffect, useState } from "react";
+import "./App.css";
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const password = [4, 2, 9, 9];
 function App() {
-  const [count, setCount] = useState(0)
+  const [Error, setError] = useState("");
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [pressedNumbers, setPressedNumbers] = useState([]);
+  const [isCorrect, setCorrect] = useState(false);
+
+  useEffect(() => {
+    if (pressedNumbers.length === 1) {
+      setError("");
+    }
+    if (pressedNumbers.length === password.length) {
+      if (pressedNumbers.join("") === password.join("")) {
+        setConfirmMessage("Correct");
+
+        setCorrect(true);
+      } else {
+        setError("False");
+      }
+      setPressedNumbers([]);
+    }
+  }, [pressedNumbers]);
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>{pressedNumbers}</h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      {isCorrect ? (
+        <h1>{confirmMessage}</h1>
+      ) : (
+        <div>
+          <div>
+            <h1>{Error}</h1>
+          </div>
+          <div className="number-pad">
+            {numbers.map((number, index) => {
+              return (
+                <button
+                  className={number === 0 ? "zero" : "undefined"}
+                  key={index}
+                  onClick={() => {
+                    setPressedNumbers((cur) => [...cur, number]);
+                  }}
+                >
+                  {number}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
